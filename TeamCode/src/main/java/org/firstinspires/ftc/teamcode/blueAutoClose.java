@@ -203,6 +203,7 @@ public class blueAutoClose extends OpMode {
             case 7:
                 if(!follower.isBusy()) {
                     follower.followPath(paths.strafeOffLine);
+                    setPathState(8);
                 }
                 break;
             case 8:
