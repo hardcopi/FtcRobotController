@@ -12,7 +12,7 @@ public class FlywheelPfTuner extends OpMode {
     public DcMotorEx flywheelMotor;
 
     // Target velocities (ticks/second or RPM depending on your units)
-    public double highVelocity = 1500.0;
+    public double highVelocity = 4200.0;
     public double lowVelocity  = 900.0;
     public double curTargetVelocity = highVelocity;
 
