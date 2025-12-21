@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+java
+        package org.firstinspires.ftc.teamcode;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -35,8 +36,20 @@ public class blueAutoClose extends OpMode {
 
         paths = new Paths(follower); // Build paths
 
+        // Initialize path state and start the first path once
+        pathState = 0;
+        pathTimer.resetTimer();
+
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        // Begin the first path only when PLAY is pressed
+        pathTimer.resetTimer();
+        follower.followPath(paths.shootPreload, true);
     }
 
     @Override
@@ -59,7 +72,7 @@ public class blueAutoClose extends OpMode {
     public static class Paths {
 
         public PathChain shootPreload, lineupField1, intakeField1, shootField1,
-                        lineupField2, intakeField2, shootField2, strafeOffLine;
+                lineupField2, intakeField2, shootField2, strafeOffLine;
 
         public Paths(Follower follower) {
             shootPreload = follower
@@ -131,15 +144,13 @@ public class blueAutoClose extends OpMode {
     public int autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(paths.shootPreload, true);
-
-                // Wait 8 seconds to shoot
-                if(pathTimer.getElapsedTimeSeconds() > 8) {
+                // First path already started in init(); use timer to control shooting sequence.
+                // Wait 8 seconds to shoot, then 5 more seconds to finish (total >13)
+                if (pathTimer.getElapsedTimeSeconds() > 8) {
                     // Shoot Preload
                 }
 
-                // Wait another 5 seconds to finish shooting
-                if(pathTimer.getElapsedTimeSeconds() > 5) {
+                if (pathTimer.getElapsedTimeSeconds() > 13) {
                     // Reverse Transfer Wheel to stop shooting
                     setPathState(1);
                 }
@@ -157,19 +168,19 @@ public class blueAutoClose extends OpMode {
                 }
                 break;
             case 3:
+                // Start the shooting path once when ready, reset timer to measure shooting duration
                 if(!follower.isBusy()) {
                     follower.followPath(paths.shootField1);
+                    pathTimer.resetTimer();
+                }
 
-                    // Wait 8 seconds to shoot
-                    if(pathTimer.getElapsedTimeSeconds() > 8) {
-                        // Shoot Preload
-                    }
+                if(pathTimer.getElapsedTimeSeconds() > 8) {
+                    // Shoot Preload
+                }
 
-                    // Wait another 5 seconds to finish shooting
-                    if(pathTimer.getElapsedTimeSeconds() > 5) {
-                        // Reverse Transfer Wheel to stop shooting
-                        setPathState(4);
-                    }
+                if(pathTimer.getElapsedTimeSeconds() > 13) {
+                    // Reverse Transfer Wheel to stop shooting
+                    setPathState(4);
                 }
                 break;
             case 4:
@@ -185,19 +196,19 @@ public class blueAutoClose extends OpMode {
                 }
                 break;
             case 6:
+                // Start the shooting path once when ready, reset timer to measure shooting duration
                 if(!follower.isBusy()) {
                     follower.followPath(paths.shootField2);
+                    pathTimer.resetTimer();
+                }
 
-                    // Wait 8 seconds to shoot
-                    if(pathTimer.getElapsedTimeSeconds() > 8) {
-                        // Shoot Preload
-                    }
+                if(pathTimer.getElapsedTimeSeconds() > 8) {
+                    // Shoot Preload
+                }
 
-                    // Wait another 5 seconds to finish shooting
-                    if(pathTimer.getElapsedTimeSeconds() > 5) {
-                        // Reverse Transfer Wheel to stop shooting
-                        setPathState(7);
-                    }
+                if(pathTimer.getElapsedTimeSeconds() > 13) {
+                    // Reverse Transfer Wheel to stop shooting
+                    setPathState(7);
                 }
                 break;
             case 7:
